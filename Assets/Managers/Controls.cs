@@ -3,8 +3,6 @@ using System.Collections;
 
 public class Controls : MonoBehaviour {
 	
-	// Hey Mom!
-	
 	public Camera mainCamera;
 	
 	public delegate void ControllerEventManager();
