@@ -2,8 +2,6 @@ using UnityEngine;
 using System.Collections;
 
 public class Controls : MonoBehaviour {
-	
-  // Hey Mom!
 
 	public Camera mainCamera;
 	
