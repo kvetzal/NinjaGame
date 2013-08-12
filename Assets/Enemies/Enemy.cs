@@ -4,9 +4,15 @@ using System.Collections.Generic;
 public class Enemy : MonoBehaviour {
 	
 	public GameObject enemyPrefab;
+	public GameObject groundPrefab;
 	public LineRenderer linePrefab;
 	
 	public List<GameObject> Enemies = new List<GameObject>();
+	public List<GameObject> EnemyBlocks = new List<GameObject>();
+	
+	int NumOfEnemies, MaxEnemies = 0, MinEnemies = 1;
+	
+	bool enemyGeneratorCalled = false;
 	
 	int count = 0;
 	
@@ -32,6 +38,10 @@ public class Enemy : MonoBehaviour {
 	}
 	
 	private void enemyUpdate() {
+		if (Ground.groundCubes[Ground.groundCubes.Length - 1] != null && enemyGeneratorCalled == false) {
+			EnemyGenerator();
+		}
+		
 		foreach (GameObject enemy in Enemies) {
 			List<Ray> visionRays = new List<Ray>();
 			if (enemy != null) {
@@ -69,13 +79,16 @@ public class Enemy : MonoBehaviour {
 				}while(degree > ENDINGDEGREE);
 				
 				foreach (Ray ray in visionRays) {
-					RaycastHit hit;
-					if (Physics.Raycast(ray, out hit, ray.GetPoint(7).x)) {
-		
-						if (hit.collider.tag == "Ninja") {
-							count++;
-							if (count % 100 == 0) {
-								Debug.Log("Ninja was seen " + count + " times");
+					if (ray.GetPoint(7).x > 0) {
+						RaycastHit hit;
+						if (Physics.Raycast(ray, out hit, ray.GetPoint(7).x)) {
+							if (hit.collider.tag != "Ninja") {
+							}
+							else if (hit.collider.tag == "Ninja") {
+								count++;
+								if (count % 100 == 0) {
+									Debug.Log("Ninja was seen " + count + " times");
+								}
 							}
 						}
 					}
@@ -91,13 +104,44 @@ public class Enemy : MonoBehaviour {
 				Enemies.Remove(Enemies[i]);
 			}
 		}
-		Enemies.Add((GameObject)Instantiate(enemyPrefab));
+		if (Ground.groundCubes[Ground.groundCubes.Length - 1] != null) {
+			EnemyGenerator();
+		}
 		enemyConstructor();
 		foreach (GameObject enemy in Enemies) {
 			if (enemy != null) {
 				enemy.rigidbody.isKinematic = false;
 			}
 		}
+	}
+	
+	private void EnemyGenerator() {
+		NumOfEnemies = Random.Range(MinEnemies, MaxEnemies);
+		Debug.Log("Number of Enemies: " + NumOfEnemies);
+		int EnemyCount = 0;
+		for (int i = (Ground.groundCubes.Length - 1); i > -1; i--) {
+			if (Ground.groundCubes[i].localScale.x > 10 && EnemyCount < NumOfEnemies) {
+				GameObject firstBlock = (GameObject)Instantiate(groundPrefab);
+				firstBlock.transform.localScale = new Vector3(2f, 2f, 1f);
+				float firstBlockPositionX = Ground.groundCubes[i].position.x - (Ground.groundCubes[i].localScale.x / 2) + (firstBlock.transform.localScale.x / 2);
+				float firstBlockPositionY = Ground.groundCubes[i].position.y + (Ground.groundCubes[i].localScale.y / 2) + (firstBlock.transform.localScale.y / 2);
+				firstBlock.transform.position = new Vector3(firstBlockPositionX, firstBlockPositionY, 0f);
+				EnemyBlocks.Add(firstBlock);
+				
+				GameObject secondBlock = (GameObject)Instantiate(groundPrefab);
+				secondBlock.transform.localScale = new Vector3(2f, 2f, 1f);
+				float secondBlockPositionX = Ground.groundCubes[i].position.x + (Ground.groundCubes[i].localScale.x / 2) - (secondBlock.transform.localScale.x / 2);
+				float secondBlockPositionY = Ground.groundCubes[i].position.y + (Ground.groundCubes[i].localScale.y / 2) + (secondBlock.transform.localScale.y / 2);
+				secondBlock.transform.position = new Vector3(secondBlockPositionX, secondBlockPositionY, 0f);
+				EnemyBlocks.Add(secondBlock);
+				
+				GameObject newEnemy = (GameObject)Instantiate(enemyPrefab);
+				newEnemy.transform.position = new Vector3 (Ground.groundCubes[i].position.x, 2f, 0f);
+				Enemies.Add(newEnemy);
+				EnemyCount++;
+			}
+		}
+		enemyGeneratorCalled = true;
 	}
 	
 	private void GameOver() {

@@ -14,8 +14,8 @@ public class Ground : MonoBehaviour {
 	// max gap jumpable is 12
 	private const int numberOfGaps = 6;
 	
-	public Transform[] groundCubes = new Transform[numberOfGaps + 1];
-	public List<Transform> platformCubes = new List<Transform>();
+	public static Transform[] groundCubes = new Transform[numberOfGaps + 1];
+	public static List<Transform> platformCubes = new List<Transform>();
 	
 	public int count = 0;
 	
