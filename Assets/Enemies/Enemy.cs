@@ -72,7 +72,7 @@ public class Enemy : MonoBehaviour {
 				
 				foreach (Ray ray in visionRays) {
 					RaycastHit hit;
-					if (Physics.Raycast(ray, ray.GetPoint(7).x, hit)) {
+					if (Physics.Raycast(ray, out hit, ray.GetPoint(7).x)) {
 		
 						if (hit.collider.tag == "Ninja") {
 							count++;
