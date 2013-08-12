@@ -33,7 +33,10 @@ public class Enemy : MonoBehaviour {
 	
 	private void enemyConstructor(GameObject enemy) {
 		enemy = (GameObject)Instantiate(enemyPrefab);
-		//enemy.transform.position = new Vector3(2f, 2f, 0);
+		enemy.AddComponent("Rigidbody");
+		enemy.rigidbody.isKinematic = true;
+		enemy.transform.position = new Vector3(2f, 2f, 0);
+		enemy.rigidbody.isKinematic = false;
 	}
 	
 	private void enemyUpdate(GameObject enemy) {
@@ -60,6 +63,7 @@ public class Enemy : MonoBehaviour {
 			double rayVectorY = Mathf.Sin(Mathf.PI * degree / 180);
 			Vector3 rayVector = new Vector3((float)rayVectorX, (float)rayVectorY, 0f);
 			Ray ray = new Ray(enemy.transform.position, rayVector);
+			
 			LineRenderer line = (LineRenderer)Instantiate(linePrefab);
 			line.SetPosition(0, enemy.transform.position);
 			
@@ -83,8 +87,14 @@ public class Enemy : MonoBehaviour {
 	}
 	
 	private void GameStart() {
+		foreach (GameObject enemy in Enemies) {
+			enemy.rigidbody.isKinematic = false;
+		}
 	}
 	
 	private void GameOver() {
+		foreach (GameObject enemy in Enemies) {
+			enemy.rigidbody.isKinematic = true;
+		}
 	}
 }
