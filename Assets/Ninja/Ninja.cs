@@ -34,9 +34,9 @@ public class Ninja : MonoBehaviour {
 		// Ends the game whem the player falls below the y Location for Game over
 		if (transform.position.y < yLocationForGameOver)
 			GameEventManager.TriggerGameOver();
-		/*if (Input.anyKeyDown) {
+		if (Input.anyKeyDown) {
 			GameEventManager.TriggerGameOver();
-		}*/
+		}
 		
 	}
 	

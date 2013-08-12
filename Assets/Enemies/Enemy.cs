@@ -8,7 +8,7 @@ public class Enemy : MonoBehaviour {
 	
 	public List<GameObject> Enemies = new List<GameObject>();
 	
-	private List<Ray> visionRays = new List<Ray>();
+	public List<Ray> visionRays = new List<Ray>();
 	
 	int count = 0;
 	
@@ -76,7 +76,9 @@ public class Enemy : MonoBehaviour {
 		
 						if (hit.collider.tag == "Ninja") {
 							count++;
-							//Debug.Log("Ninja was seen " + count + " times");
+							if (count % 100 == 0) {
+								Debug.Log("Ninja was seen " + count + " times");
+							}
 						}
 					}
 				}
@@ -86,6 +88,7 @@ public class Enemy : MonoBehaviour {
 	
 	private void GameStart() {
 		for (int i = 0; i < Enemies.Count; i++) {
+			
 			if (Enemies[i] != null) {
 				Destroy(Enemies[i].gameObject);
 			}
