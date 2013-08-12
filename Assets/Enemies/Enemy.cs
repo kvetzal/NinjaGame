@@ -81,6 +81,9 @@ public class Enemy : MonoBehaviour {
 	}
 	
 	private void GameStart() {
+		for (int i  = 0; i < Enemies.Count; i++) {
+			Destroy(Enemies[i]);
+		}
 		Enemies.Add(new GameObject("Enemy"));
 		enemyConstructor();
 		foreach (GameObject enemy in Enemies) {
