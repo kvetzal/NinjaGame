@@ -58,14 +58,12 @@ public class Enemy : MonoBehaviour {
 					double rayVectorX = Mathf.Cos(Mathf.PI * degree / 180);
 					double rayVectorY = Mathf.Sin(Mathf.PI * degree / 180);
 					Vector3 rayVector = new Vector3((float)rayVectorX, (float)rayVectorY, 0f);
-					Debug.Log ("enemy exist: " + enemy);
 					Ray ray = new Ray(enemy.transform.position, rayVector);
 					
 					LineRenderer line = (LineRenderer)Instantiate(linePrefab);
 					line.SetPosition(0, enemy.transform.position);
 					
 					line.SetPosition(1, ray.GetPoint(7));
-					Debug.Log ("Ray.GetPoint(7).x : " + ray.GetPoint(7).x);
 					lines.Add(line);
 					
 					degree -= 5;
@@ -74,11 +72,11 @@ public class Enemy : MonoBehaviour {
 				
 				foreach (Ray ray in visionRays) {
 					RaycastHit hit;
-					if (Physics.Raycast(ray, out hit, ray.GetPoint(7).x)) {
+					if (Physics.Raycast(ray, ray.GetPoint(7).x, hit)) {
 		
 						if (hit.collider.tag == "Ninja") {
 							count++;
-							Debug.Log("Ninja was seen " + count + " times");
+							//Debug.Log("Ninja was seen " + count + " times");
 						}
 					}
 				}
