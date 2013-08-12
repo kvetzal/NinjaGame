@@ -88,9 +88,12 @@ public class Enemy : MonoBehaviour {
 	
 	private void GameStart() {
 		for (int i = 0; i < Enemies.Count; i++) {
-			
+			for (int x = 0; x < visionRays.Count; x++) {
+				visionRays.Remove(visionRays[x]);
+			}
 			if (Enemies[i] != null) {
 				Destroy(Enemies[i].gameObject);
+				Enemies.Remove(Enemies[i]);
 			}
 		}
 		Enemies.Add((GameObject)Instantiate(enemyPrefab));
