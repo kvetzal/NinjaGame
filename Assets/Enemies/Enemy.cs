@@ -3,16 +3,16 @@ using System.Collections.Generic;
 
 public class Enemy : MonoBehaviour {
 	
-	public GameObject enemyPrefab;
-	public GameObject groundPrefab;
+	public static GameObject enemyPrefab;
+	public static GameObject groundPrefab;
 	public LineRenderer linePrefab;
 	
-	public List<GameObject> Enemies = new List<GameObject>();
-	public List<GameObject> EnemyBlocks = new List<GameObject>();
+	public static List<GameObject> enemies = new List<GameObject>();
+	public static List<GameObject> enemyBlocks = new List<GameObject>();
 	
-	int NumOfEnemies, MaxEnemies = 0, MinEnemies = 1;
+	private static int numOfEnemies, maxEnemies = 1, minEnemies = 4;
 	
-	bool enemyGeneratorCalled = false;
+	private static bool enemyGeneratorCalled = false;
 	
 	int count = 0;
 	
@@ -27,41 +27,34 @@ public class Enemy : MonoBehaviour {
 		enemyUpdate();
 	}
 	
-	private void enemyConstructor() {
-		for (int i = 0; i < Enemies.Count; i++) {
-			if (Enemies[i] != null) {
-				//Enemies[i] = (GameObject)Instantiate(enemyPrefab);
-				Enemies[i].rigidbody.isKinematic = true;
-				Enemies[i].transform.position = new Vector3(2f, 2f, 0);
+	private static void enemyConstructor() {
+		for (int i = 0; i < enemies.Count; i++) {
+			if (enemies[i] != null) {
+				//enemies[i] = (GameObject)Instantiate(enemyPrefab);
+				enemies[i].rigidbody.isKinematic = true;
+				enemies[i].transform.position = new Vector3(2f, 2f, 0);
 			}
 		}
 	}
 	
-	private void enemyUpdate() {
+	public void enemyUpdate() {
 		if (Ground.groundCubes[Ground.groundCubes.Length - 1] != null && enemyGeneratorCalled == false) {
+			Debug.Log("Enemy Genertor called");
 			EnemyGenerator();
 		}
 		
-		foreach (GameObject enemy in Enemies) {
+		foreach (GameObject enemy in enemies) {
 			List<Ray> visionRays = new List<Ray>();
 			if (enemy != null) {
-				//enemy.transform.position = new Vector3(2f, 2f, 0);
 				//math example
 				//float num = Mathf.Sin(Mathf.PI * 90 / 180);
 				// returns 1
-				
-				/*for (int i = 0; i < lines.Count; i++) {
-					if (lines[i] != null) {
-						Destroy(lines[i].gameObject);
-					}
-				}*/
 				
 				const int ENDINGDEGREE = -45;
 				int degree = 45;
 				
 				do {
-					/*Debug.Log (rayVector);
-					Mathf works in radians
+					/*Mathf works in radians
 					see figure 1*/
 					
 					double rayVectorX = Mathf.Cos(Mathf.PI * degree / 180);
@@ -69,17 +62,23 @@ public class Enemy : MonoBehaviour {
 					Vector3 rayVector = new Vector3((float)rayVectorX, (float)rayVectorY, 0f);
 					Ray ray = new Ray(enemy.transform.position, rayVector);
 					
-					/*LineRenderer line = (LineRenderer)Instantiate(linePrefab);
-					line.SetPosition(0, enemy.transform.position);
-					line.SetPosition(1, ray.GetPoint(7));
-					lines.Add(line);*/
-					
 					degree -= 10;
 					visionRays.Add(ray);
 				}while(degree > ENDINGDEGREE);
 				
+				for (int i = 0; i < lines.Count; i++) {
+					if (lines[i] != null) {
+						Destroy(lines[i].gameObject);
+					}
+				}
+				
 				foreach (Ray ray in visionRays) {
 					if (ray.GetPoint(7).x > 0) {
+						lines.Add((LineRenderer)Instantiate(linePrefab));
+						lines.Reverse();
+						lines[0].SetPosition(0, ray.origin);
+						lines[0].SetPosition(1, ray.GetPoint(7));
+						lines.Reverse();
 						RaycastHit hit;
 						if (Physics.Raycast(ray, out hit, ray.GetPoint(7).x)) {
 							if (hit.collider.tag != "Ninja") {
@@ -97,58 +96,65 @@ public class Enemy : MonoBehaviour {
 		}
 	}
 	
-	private void GameStart() {
-		for (int i = 0; i < Enemies.Count; i++) {
-			if (Enemies[i] != null) {
-				Destroy(Enemies[i].gameObject);
-				Enemies.Remove(Enemies[i]);
+	public static void GameStart() {
+		for (int i = 0; i < enemies.Count; i++) {
+			if (enemies[i] != null) {
+				Destroy(enemies[i].gameObject);
+				enemies.Remove(enemies[i]);
+			}
+		}
+		for (int i = 0; i < enemyBlocks.Count; i++) {
+			if (enemyBlocks[i] != null) {
+				Destroy(enemyBlocks[i].gameObject);
+				enemyBlocks.Remove(enemyBlocks[i]);
 			}
 		}
 		if (Ground.groundCubes[Ground.groundCubes.Length - 1] != null) {
 			EnemyGenerator();
 		}
 		enemyConstructor();
-		foreach (GameObject enemy in Enemies) {
+		foreach (GameObject enemy in enemies) {
 			if (enemy != null) {
 				enemy.rigidbody.isKinematic = false;
 			}
 		}
 	}
 	
-	private void EnemyGenerator() {
-		NumOfEnemies = Random.Range(MinEnemies, MaxEnemies);
-		Debug.Log("Number of Enemies: " + NumOfEnemies);
-		int EnemyCount = 0;
+	private static void EnemyGenerator() {
+		numOfEnemies = Random.Range(minEnemies, maxEnemies);
+		Debug.Log("Number of Enemies: " + numOfEnemies);
+		int enemyCount = 0;
 		for (int i = (Ground.groundCubes.Length - 1); i > -1; i--) {
-			if (Ground.groundCubes[i].localScale.x > 10 && EnemyCount < NumOfEnemies) {
+			if (Ground.groundCubes[i].localScale.x > 10 && enemyCount < numOfEnemies) {
 				GameObject firstBlock = (GameObject)Instantiate(groundPrefab);
 				firstBlock.transform.localScale = new Vector3(2f, 2f, 1f);
 				float firstBlockPositionX = Ground.groundCubes[i].position.x - (Ground.groundCubes[i].localScale.x / 2) + (firstBlock.transform.localScale.x / 2);
 				float firstBlockPositionY = Ground.groundCubes[i].position.y + (Ground.groundCubes[i].localScale.y / 2) + (firstBlock.transform.localScale.y / 2);
 				firstBlock.transform.position = new Vector3(firstBlockPositionX, firstBlockPositionY, 0f);
-				EnemyBlocks.Add(firstBlock);
+				enemyBlocks.Add(firstBlock);
 				
 				GameObject secondBlock = (GameObject)Instantiate(groundPrefab);
 				secondBlock.transform.localScale = new Vector3(2f, 2f, 1f);
 				float secondBlockPositionX = Ground.groundCubes[i].position.x + (Ground.groundCubes[i].localScale.x / 2) - (secondBlock.transform.localScale.x / 2);
 				float secondBlockPositionY = Ground.groundCubes[i].position.y + (Ground.groundCubes[i].localScale.y / 2) + (secondBlock.transform.localScale.y / 2);
 				secondBlock.transform.position = new Vector3(secondBlockPositionX, secondBlockPositionY, 0f);
-				EnemyBlocks.Add(secondBlock);
+				enemyBlocks.Add(secondBlock);
 				
 				GameObject newEnemy = (GameObject)Instantiate(enemyPrefab);
 				newEnemy.transform.position = new Vector3 (Ground.groundCubes[i].position.x, 2f, 0f);
-				Enemies.Add(newEnemy);
-				EnemyCount++;
+				enemies.Add(newEnemy);
+				enemyCount++;
 			}
 		}
 		enemyGeneratorCalled = true;
 	}
 	
 	private void GameOver() {
-		foreach (GameObject enemy in Enemies) {
+		foreach (GameObject enemy in enemies) {
 			if (enemy != null) {
 				enemy.rigidbody.isKinematic = true;
 			}
 		}
+		enemyGeneratorCalled = false;
 	}
 }

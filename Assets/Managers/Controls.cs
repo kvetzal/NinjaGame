@@ -2,9 +2,6 @@ using UnityEngine;
 using System.Collections;
 
 public class Controls : MonoBehaviour {
-
-	public Camera mainCamera;
-	
 	public delegate void ControllerEventManager();
 	
 	public static event ControllerEventManager swipe, touchLeftEdge, touchRightEdge, tapMiddle;

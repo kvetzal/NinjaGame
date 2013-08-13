@@ -6,7 +6,7 @@ public class Ninja : MonoBehaviour {
 	private float verticalJumpVelocity;
 	
 	public static float yLocationForGameOver;
-	private bool touchingPlatform;
+	// private bool touchingPlatform;
 	
 	private float movementSpeed;
 	
@@ -34,20 +34,20 @@ public class Ninja : MonoBehaviour {
 		// Ends the game whem the player falls below the y Location for Game over
 		if (transform.position.y < yLocationForGameOver)
 			GameEventManager.TriggerGameOver();
-		/*if (Input.anyKeyDown) {
+		if (Input.anyKeyDown) {
 			GameEventManager.TriggerGameOver();
-		}*/
+		}
 		
 	}
 	
 	void OnCollisionEnter() {
 		// when the player sets touches the platform this allows them to jump again
-		touchingPlatform = true;
+		// touchingPlatform = true;
 	}
 	
 	void OnCollisionExit() {
 		// this stops the player from jumping when they are mid air
-		touchingPlatform = false;
+		// touchingPlatform = false;
 	}
 	
 	public Vector3 GetNinjaPosition() {
