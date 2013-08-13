@@ -14,22 +14,22 @@ public class Ground : MonoBehaviour {
 	// max gap jumpable is 12
 	private const int numberOfGaps = 6;
 	
-	public static Transform[] groundCubes = new Transform[numberOfGaps + 1];
-	public static List<Transform> platformCubes = new List<Transform>();
+	public Transform[] groundCubes;
+	public List<Transform> platformCubes = new List<Transform>();
 	
-	public int count = 0;
+	private int minEnemyAreas = 1, maxEnemyAreas = 4;
+	
+	private int enemyAreas;
+	
+	private int[] enemyAreaLocations;
 	
 	void Start() {
 		GameEventManager.GameStart += GameStart;
 		GameEventManager.GameOver += GameOver;
-		
-		enabled = false;
 	}
 	
 	private void GameStart() {
 		GroundSetUp();
-		
-		enabled = true;
 	}
 	
 	private void GroundSetUp() {
@@ -39,6 +39,11 @@ public class Ground : MonoBehaviour {
 			}
 		}
 		
+		enemyAreas = Random.Range(minEnemyAreas, maxEnemyAreas);
+		enemyAreaLocations = new int[enemyAreas];
+		
+		groundCubes = new Transform[numberOfGaps + 1 + (enemyAreaLocations.Length * 2)];
+		
 		Vector3 cubePosition = new Vector3(0, 0, 0);
 		float gap = 0f;
 		
@@ -47,7 +52,8 @@ public class Ground : MonoBehaviour {
 		float currentWidth;
 		float oldWidth = 0f;
 		
-		
+		float enemyAreaPercentChance = 0.25f;
+		float createEnemyArea;
 		
 		for (int i = 0; i < groundCubes.Length; i++) {
 			currentWidth = Random.Range(minCubeLength, maxCubeLength);
@@ -66,6 +72,40 @@ public class Ground : MonoBehaviour {
 			
 			groundCubes[i].renderer.enabled = true;
 			oldWidth = currentWidth;
+			
+			createEnemyArea = Random.Range(0f, 1f);
+			
+			if (createEnemyArea > enemyAreaPercentChance) {
+				for (int x = 0; x< enemyAreaLocations.Length; x++) {
+					if (enemyAreaLocations[x] == 0) {
+						enemyAreaLocations[x] = i;
+						break;
+					}
+				}
+				if (enemyAreaLocations[enemyAreaLocations.Length - 1] != 0) {
+					float positionX;
+					float positionY;
+					
+					Transform cube = (Transform)Instantiate(groundCubePrefab);
+					cube.transform.localScale = new Vector3(1f, 1f, 1f);
+					
+					positionX = groundCubes[i].transform.position.x - (groundCubes[i].transform.localScale.x / 2) + (cube.transform.localScale.x / 2);
+					positionY = groundCubes[i].transform.position.y + (groundCubes[i].transform.localScale.y / 2) + (cube.transform.localScale.y / 2);
+					
+					cube.transform.position = new Vector3(positionX, positionY, 0f);
+					i++;
+					groundCubes[i] = cube;
+					
+					positionX = groundCubes[i].transform.position.x + (groundCubes[i].transform.localScale.x / 2) - (cube.transform.localScale.x / 2);
+					cube.transform.position = new Vector3(positionX, positionY, 0f);
+					i++;
+					groundCubes[i] = cube;
+					
+					enemyAreaPercentChance = 0.25f;
+				}
+			}
+			else
+				enemyAreaPercentChance += 0.25f;
 			
 			if (gap > MAXJUMP) {
 				PlatformSetUp(i, gap);
@@ -91,7 +131,6 @@ public class Ground : MonoBehaviour {
 		float gapLeftToJump = cubeGap;
 		
 		do {
-			count++;
 			Transform platform = (Transform)Instantiate(groundCubePrefab);
 			
 			platform.localScale = new Vector3(platformWidth, PLATFORMHEIGHT, 1f);
@@ -124,6 +163,9 @@ public class Ground : MonoBehaviour {
 				Destroy(platformCubes[i].gameObject);
 			}
 		}
-		enabled = false;
+	}
+	
+	public int[] GetEnemyAreaLocations() {
+		return enemyAreaLocations;
 	}
 }

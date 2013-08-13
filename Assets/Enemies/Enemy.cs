@@ -1,18 +1,18 @@
-using UnityEngine;
+/*using UnityEngine;
 using System.Collections.Generic;
 
 public class Enemy : MonoBehaviour {
 	
-	public static GameObject enemyPrefab;
-	public static GameObject groundPrefab;
+	public GameObject groundPrefab;
 	public LineRenderer linePrefab;
+	public  GameObject enemyPrefab;
 	
-	public static List<GameObject> enemies = new List<GameObject>();
-	public static List<GameObject> enemyBlocks = new List<GameObject>();
+	public List<GameObject> enemies = new List<GameObject>();
+	public List<GameObject> enemyBlocks = new List<GameObject>();
 	
-	private static int numOfEnemies, maxEnemies = 1, minEnemies = 4;
+	private int numOfEnemies, maxEnemies = 1, minEnemies = 4;
 	
-	private static bool enemyGeneratorCalled = false;
+	private bool enemyGeneratorCalled = false;
 	
 	int count = 0;
 	
@@ -27,7 +27,7 @@ public class Enemy : MonoBehaviour {
 		enemyUpdate();
 	}
 	
-	private static void enemyConstructor() {
+	private void enemyConstructor() {
 		for (int i = 0; i < enemies.Count; i++) {
 			if (enemies[i] != null) {
 				//enemies[i] = (GameObject)Instantiate(enemyPrefab);
@@ -54,8 +54,8 @@ public class Enemy : MonoBehaviour {
 				int degree = 45;
 				
 				do {
-					/*Mathf works in radians
-					see figure 1*/
+					Mathf works in radians
+					see figure 1
 					
 					double rayVectorX = Mathf.Cos(Mathf.PI * degree / 180);
 					double rayVectorY = Mathf.Sin(Mathf.PI * degree / 180);
@@ -96,7 +96,7 @@ public class Enemy : MonoBehaviour {
 		}
 	}
 	
-	public static void GameStart() {
+	private void GameStart() {
 		for (int i = 0; i < enemies.Count; i++) {
 			if (enemies[i] != null) {
 				Destroy(enemies[i].gameObject);
@@ -120,7 +120,7 @@ public class Enemy : MonoBehaviour {
 		}
 	}
 	
-	private static void EnemyGenerator() {
+	private void EnemyGenerator() {
 		numOfEnemies = Random.Range(minEnemies, maxEnemies);
 		Debug.Log("Number of Enemies: " + numOfEnemies);
 		int enemyCount = 0;
@@ -157,4 +157,4 @@ public class Enemy : MonoBehaviour {
 		}
 		enemyGeneratorCalled = false;
 	}
-}
+}*/
