@@ -23,7 +23,7 @@ public class Ground : MonoBehaviour {
 	
 	private int[] enemyAreaLocations;
 	
-	public Ground() {
+	void Start() {
 		GameEventManager.GameStart += GameStart;
 		GameEventManager.GameOver += GameOver;
 	}
@@ -114,6 +114,7 @@ public class Ground : MonoBehaviour {
 				cube.transform.position = new Vector3(positionX, positionY, 0f);
 				groundCubeIndexID++;
 				groundCubes[groundCubeIndexID] = cube;
+				cube.renderer.enabled = false;
 				
 				enemyAreaPercentChance = 25;
 			}
