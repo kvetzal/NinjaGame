@@ -11,11 +11,6 @@ public class GUIManager : MonoBehaviour {
 		gameOverTxt.enabled = false;
 	}
 	
-	void Update() {
-		if (Input.anyKeyDown)
-			GameEventManager.TriggerGameStart();
-	}
-	
 	private void GameStart() {
 		gameOverTxt.enabled = false;
 		instructionsTxt.enabled = false;
