@@ -2,14 +2,14 @@ using UnityEngine;
 using System.Collections.Generic;
 
 public class EnemyClass : MonoBehaviour {
-	public  GameObject enemyPrefab;
+	public GameObject enemyPrefab;
 	public LineRenderer linePrefab;
 	
 	private GameObject enemyCharacter;
 	private List<Ray> visionRays;
 	private int directionX;
 	
-	public EnemyClass() {
+	void Start() {
 		enemyCharacter = (GameObject)Instantiate(enemyPrefab);
 		visionRays = new List<Ray>();
 	}
