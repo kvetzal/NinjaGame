@@ -10,6 +10,7 @@ public class ScriptManager : MonoBehaviour {
 	public List<EnemyClass> enemies;
 	
 	bool GamePlaying, GameEnded;
+	bool EnemyGeneratorCalled = false;
 	
 	void Start () {
 		GameEventManager.GameStart += GameStart;
@@ -31,6 +32,9 @@ public class ScriptManager : MonoBehaviour {
 	}
 	
 	void Update() {
+		if (groundManager.GetGroundIsSetUp() && !EnemyGeneratorCalled) {
+			//EnemyGenerator();
+		}
 		if (!GamePlaying) {
 			if (Input.anyKeyDown)
 				GameEventManager.TriggerGameStart();
@@ -45,6 +49,7 @@ public class ScriptManager : MonoBehaviour {
 	}
 	
 	private void EnemyGenerator() {
+		EnemyGeneratorCalled = true;
 		int numOfEnemies;
 		int[] enemyAreaLocations;
 		enemies = new List<EnemyClass>();
@@ -53,7 +58,7 @@ public class ScriptManager : MonoBehaviour {
 		for (int i = 0; i < numOfEnemies; i++) {
 			EnemyClass newEnemy = (EnemyClass)Instantiate(enemyBehaviourPrefab);
 			float positionX = groundManager.groundCubes[enemyAreaLocations[i]].transform.position.x;
-			positionX += groundManager.groundCubes[enemyAreaLocations[i]].transform.localScale.x / 2;
+//			positionX += groundManager.groundCubes[enemyAreaLocations[i]].transform.localScale.x / 2;
 			
 			newEnemy.transform.position = new Vector3 (positionX, 2f, 0f);
 			enemies.Add(newEnemy);

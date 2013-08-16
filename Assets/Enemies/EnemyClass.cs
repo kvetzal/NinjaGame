@@ -57,9 +57,11 @@ public class EnemyClass : MonoBehaviour {
 	}
 	
 	public void UpdateEnemy() {
-		enemyCharacter.transform.position = new Vector3(enemyCharacter.transform.position.x + (float)directionX,
-			enemyCharacter.transform.position.y, 
-			enemyCharacter.transform.position.z);
+		if (enemyCharacter != null) {
+			enemyCharacter.transform.position = new Vector3(enemyCharacter.transform.position.x + (float)directionX,
+				enemyCharacter.transform.position.y, 
+				enemyCharacter.transform.position.z);
+		}
 	}
 	
 	private void OnCollisionEnter(Collision collision) {

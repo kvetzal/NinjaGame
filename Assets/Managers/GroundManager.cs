@@ -21,6 +21,8 @@ public class GroundManager : MonoBehaviour {
 	private int enemyAreas;
 	private int[] enemyAreaLocations;
 	
+	private bool GroundIsSetUp = false;
+	
 	void Start() {
 		GameEventManager.GameStart += GameStart;
 		GameEventManager.GameOver += GameOver;
@@ -28,6 +30,7 @@ public class GroundManager : MonoBehaviour {
 	
 	private void GameStart() {
 		GroundSetUp();
+		GroundIsSetUp = true;
 	}
 	
 	private void GroundSetUp() {
@@ -75,20 +78,26 @@ public class GroundManager : MonoBehaviour {
 	}
 	
 	private void DestroyOldGround() {
-		for (int i = 0; i < groundCubes.Length; i++) {
-			if (groundCubes[i] != null) {
-				groundCubes = null;
+		if (groundCubes != null) {
+			for (int i = 0; i < groundCubes.Length; i++) {
+				if (groundCubes[i] != null) {
+					groundCubes = null;
+				}
 			}
 		}
-		for (int i = 0; i < platformCubes.Count; i++) {
-			if (platformCubes[i] != null) {
-				Destroy(platformCubes[i].gameObject);
-				platformCubes = null;
+		if (platformCubes != null) {
+	 		for (int i = 0; i < platformCubes.Count; i++) {
+				if (platformCubes[i] != null) {
+					Destroy(platformCubes[i].gameObject);
+					platformCubes = null;
+				}
 			}
 		}
-		for (int i = 0; i < enemyAreaCubes.Length; i++) {
-			if (enemyAreaCubes[i] != null) {
-				enemyAreaCubes = null;
+		if (enemyAreaCubes != null) {
+			for (int i = 0; i < enemyAreaCubes.Length; i++) {
+				if (enemyAreaCubes[i] != null) {
+					enemyAreaCubes = null;
+				}
 			}
 		}
 	}
@@ -151,5 +160,9 @@ public class GroundManager : MonoBehaviour {
 	
 	public int[] GetEnemyAreaLocations() {
 		return enemyAreaLocations;
+	}
+	
+	public bool GetGroundIsSetUp() {
+		return GroundIsSetUp;
 	}
 }
