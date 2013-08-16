@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
 	
-public class Ground : MonoBehaviour {
+public class GroundOriginal : MonoBehaviour {
 
 	public Transform groundCubePrefab;
 	public float xLocationForTheWin;
@@ -15,6 +15,7 @@ public class Ground : MonoBehaviour {
 	private const int numberOfGaps = 6;
 	
 	public Transform[] groundCubes;
+	public Transform[] enemyAreaCubes;
 	public List<Transform> platformCubes = new List<Transform>();
 	
 	private int minEnemyAreas = 1, maxEnemyAreas = 4;
@@ -37,7 +38,10 @@ public class Ground : MonoBehaviour {
 		
 		enemyAreas = Random.Range(minEnemyAreas, maxEnemyAreas);
 		enemyAreaLocations = new int[enemyAreas];
-		groundCubes = new Transform[numberOfGaps + 1 + (enemyAreaLocations.Length * 2)];
+		groundCubes = new Transform[numberOfGaps + 1];
+		enemyAreaCubes = new Transform[enemyAreaLocations.Length * 2];
+		
+		int enemyAreaLocationIndexID = 0, enemyAreaCubesIndexID = 0;
 		
 		Vector3 cubePosition = new Vector3(0, 0, 0);
 		float cubeHeight;
@@ -65,11 +69,13 @@ public class Ground : MonoBehaviour {
 			groundCubes[i].renderer.enabled = true;
 			oldCubeWidth = currentCubeWidth;
 			
-			GenerateEnemyAreas(i);
-			
 			if (gap > MAXJUMP) {
 				PlatformSetUp(i, gap);
 			}
+			
+			GenerateEnemyAreas(enemyAreaLocationIndexID, enemyAreaCubesIndexID, i);
+			enemyAreaLocationIndexID++;
+			enemyAreaCubesIndexID += 2;
 			
 			if (i == numberOfGaps) {
 				xLocationForTheWin = groundCubes[i].position.x;
@@ -83,41 +89,45 @@ public class Ground : MonoBehaviour {
 				Destroy(groundCubes[i].gameObject);
 			}
 		}
+		for (int i = 0; i < platformCubes.Count; i++) {
+			if (platformCubes[i] != null) {
+				Destroy(platformCubes[i].gameObject);
+				platformCubes.Remove(platformCubes[i]);
+			}
+		}
+		for (int i = 0; i < enemyAreaCubes.Length; i++) {
+			if (enemyAreaCubes[i] != null) {
+				Destroy(enemyAreaCubes[i].gameObject);
+			}
+		}
 	}
 	
-	private void GenerateEnemyAreas(int groundCubeIndexID) {
+	private void GenerateEnemyAreas(int enemyAreaLocationIndexID, int enemyAreaCubesIndexID, int groundCubeIndexID) {
 		int enemyAreaPercentChance = 25;
 		int createEnemyArea = Random.Range(0, 100);
 			
 		if (createEnemyArea < enemyAreaPercentChance) {
-			for (int x = 0; x< enemyAreaLocations.Length; x++) {
-				if (enemyAreaLocations[x] == 0) {
-					enemyAreaLocations[x] = groundCubeIndexID;
-					break;
-				}
-			}
-			if (enemyAreaLocations[enemyAreaLocations.Length - 1] != 0) {
-				float positionX;
-				float positionY;
-				
-				Transform cube = (Transform)Instantiate(groundCubePrefab);
-				cube.transform.localScale = new Vector3(1f, 1f, 1f);
-				
-				positionX = groundCubes[groundCubeIndexID].transform.position.x - (groundCubes[groundCubeIndexID].transform.localScale.x / 2) + (cube.transform.localScale.x / 2);
-				positionY = groundCubes[groundCubeIndexID].transform.position.y + (groundCubes[groundCubeIndexID].transform.localScale.y / 2) + (cube.transform.localScale.y / 2);
-				
-				cube.transform.position = new Vector3(positionX, positionY, 0f);
-				groundCubeIndexID++;
-				groundCubes[groundCubeIndexID] = cube;
-				
-				positionX = groundCubes[groundCubeIndexID].transform.position.x + (groundCubes[groundCubeIndexID].transform.localScale.x / 2) - (cube.transform.localScale.x / 2);
-				cube.transform.position = new Vector3(positionX, positionY, 0f);
-				groundCubeIndexID++;
-				groundCubes[groundCubeIndexID] = cube;
-				cube.renderer.enabled = false;
-				
-				enemyAreaPercentChance = 25;
-			}
+			enemyAreaLocations[enemyAreaLocationIndexID] = groundCubeIndexID;
+			
+			float positionX;
+			float positionY;
+			
+			Transform firstCube = (Transform)Instantiate(groundCubePrefab);
+			firstCube.transform.localScale = new Vector3(1f, 1f, 1f);
+			
+			positionX = groundCubes[groundCubeIndexID].transform.position.x - (groundCubes[groundCubeIndexID].transform.localScale.x / 2) + (firstCube.transform.localScale.x / 2);
+			positionY = groundCubes[groundCubeIndexID].transform.position.y + (groundCubes[groundCubeIndexID].transform.localScale.y / 2) + (firstCube.transform.localScale.y / 2);
+			
+			firstCube.transform.position = new Vector3(positionX, positionY, 0f);
+			enemyAreaCubes[enemyAreaCubesIndexID] = firstCube;
+			enemyAreaCubesIndexID++;
+			
+			Transform secondCube = (Transform)Instantiate(groundCubePrefab);
+			positionX = groundCubes[groundCubeIndexID].transform.position.x + (groundCubes[groundCubeIndexID].transform.localScale.x / 2) - (secondCube.transform.localScale.x / 2);
+			secondCube.transform.position = new Vector3(positionX, positionY, 0f);
+			enemyAreaCubes[enemyAreaCubesIndexID] = secondCube;
+			
+			enemyAreaPercentChance = 25;
 		}
 		else
 			enemyAreaPercentChance += 25;
@@ -162,11 +172,6 @@ public class Ground : MonoBehaviour {
 	}
 	
 	private void GameOver() {
-		for (int i = 0; i < platformCubes.Count; i++) {
-			if (platformCubes[i] != null) {
-				Destroy(platformCubes[i].gameObject);
-			}
-		}
 	}
 	
 	public int[] GetEnemyAreaLocations() {

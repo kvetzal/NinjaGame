@@ -4,9 +4,9 @@ using System.Collections.Generic;
 public class ScriptManager : MonoBehaviour {
 	
 	public EnemyClass enemyBehaviourPrefab;
-	public Ground groundBehaviourPrefab;
+	public GroundManager groundBehaviourPrefab;
 	
-	private Ground groundManager;
+	private GroundManager groundManager;
 	public List<EnemyClass> enemies;
 	
 	bool GamePlaying, GameEnded;
@@ -15,7 +15,7 @@ public class ScriptManager : MonoBehaviour {
 		GameEventManager.GameStart += GameStart;
 		GameEventManager.GameOver += GameOver;
 		
-		groundManager = (Ground)Instantiate(groundBehaviourPrefab);
+		groundManager = (GroundManager)Instantiate(groundBehaviourPrefab);
 		GamePlaying = false;
 		GameEnded = false;
 	}
