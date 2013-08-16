@@ -34,7 +34,9 @@ public class GroundManager : MonoBehaviour {
 	}
 	
 	private void GroundSetUp() {
-		DestroyOldGround();
+		if (!GroundIsSetUp) {
+			DestroyOldGround();
+		}
 		
 		int minEnemyAreas = 1, maxEnemyAreas = 4;
 		enemyAreas = Random.Range(minEnemyAreas, maxEnemyAreas);
@@ -78,26 +80,20 @@ public class GroundManager : MonoBehaviour {
 	}
 	
 	private void DestroyOldGround() {
-		if (groundCubes != null) {
-			for (int i = 0; i < groundCubes.Length; i++) {
-				if (groundCubes[i] != null) {
-					groundCubes = null;
-				}
+		for (int i = 0; i < groundCubes.Length; i++) {
+			if (groundCubes != null) {
+				groundCubes.RemoveAt(i);
 			}
 		}
-		if (platformCubes != null) {
-	 		for (int i = 0; i < platformCubes.Count; i++) {
-				if (platformCubes[i] != null) {
-					Destroy(platformCubes[i].gameObject);
-					platformCubes = null;
-				}
+ 		for (int i = 0; i < platformCubes.Count; i++) {
+			if (platformCubes[i] != null) {
+				Destroy(platformCubes[i].gameObject);
+				platformCubes.RemoveAt(i);
 			}
 		}
-		if (enemyAreaCubes != null) {
-			for (int i = 0; i < enemyAreaCubes.Length; i++) {
-				if (enemyAreaCubes[i] != null) {
-					enemyAreaCubes = null;
-				}
+		for (int i = 0; i < enemyAreaCubes.Length; i++) {
+			if (enemyAreaCubes[i] != null) {
+				enemyAreaCubes.RemoveAt(i);
 			}
 		}
 	}
