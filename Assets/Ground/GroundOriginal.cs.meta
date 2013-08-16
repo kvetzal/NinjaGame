@@ -1,9 +1,0 @@
-fileFormatVersion: 2
-guid: fd82e55566fa3468a9eaad06d1b8386b
-MonoImporter:
-  serializedVersion: 2
-  defaultReferences:
-  - groundCubePrefab: {fileID: 400000, guid: c4fd672d071004306ab3090109d04be4, type: 2}
-  executionOrder: 0
-  icon: {instanceID: 0}
-  userData: 

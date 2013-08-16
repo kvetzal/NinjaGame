@@ -24,12 +24,12 @@ public class EnemyAreaBlocks : MonoBehaviour {
 		if (!StartCalled) {
 			Start();
 		}
-		int positionX = (int)(groundCubePosition.x - (groundCubeScale.x / 2) + (firstEnemyAreaCube.transform.localScale.x / 2));
-		int positionY = (int)(groundCubePosition.y + (groundCubeScale.y / 2) + (firstEnemyAreaCube.transform.localScale.y / 2));
+		float positionX = groundCubePosition.x - (groundCubeScale.x / 2) + (firstEnemyAreaCube.transform.localScale.x / 2);
+		float positionY = groundCubePosition.y + (groundCubeScale.y / 2) + (firstEnemyAreaCube.transform.localScale.y / 2);
 		
 		firstEnemyAreaCube.transform.position = new Vector3(positionX, positionY, 0f);
 		
-		positionX = (int)(groundCubePosition.x + (groundCubeScale.x / 2) - (secondEnemyAreaCube.transform.localScale.x / 2));
+		positionX = groundCubePosition.x + (groundCubeScale.x / 2) - (secondEnemyAreaCube.transform.localScale.x / 2);
 		secondEnemyAreaCube.transform.position = new Vector3(positionX, positionY, 0f);
 	}
 }

@@ -57,6 +57,8 @@ public class GroundManager : MonoBehaviour {
 					groundCubes[i].GetPosition().y, groundCubes[i].GetPosition().z));
 			}
 			else {
+				groundCubes[i].SetPosition(new Vector3(groundCubes[i].GetPosition().x - (groundCubes[i].GetScale().x / 2),
+					groundCubes[i].GetPosition().y, groundCubes[i].GetPosition().z));
 				firstGroundBlock = false;
 			}
 			

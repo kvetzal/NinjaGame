@@ -23,8 +23,8 @@ public class Platform : MonoBehaviour {
 		if (!StartCalled) {
 			Start();
 		}
-		platfromCube.transform.position = new Vector3(newPosition.x - (platfromCube.transform.localScale.x / 2),
-			newPosition.y - (platfromCube.transform.localScale.y / 2),
+		platfromCube.transform.position = new Vector3(newPosition.x + (platfromCube.transform.localScale.x / 2),
+			newPosition.y + (platfromCube.transform.localScale.y / 2),
 			newPosition.z);
 	}
 	

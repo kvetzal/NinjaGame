@@ -19,7 +19,7 @@ public class Ground : MonoBehaviour {
 			groundCube.transform.localScale = new Vector3(width, height, 1f);
 			groundCube.transform.position = new Vector3(0 + (groundCube.transform.localScale.x / 2),
 				0 - (groundCube.transform.localScale.y / 2),
-				0 - (groundCube.transform.localScale.z / 2));
+				0);
 		}
 	}
 	
